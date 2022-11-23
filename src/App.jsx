@@ -1,8 +1,7 @@
 import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import ManageTemple from "./manageTemple";
+import ManageTemple from "./ManageTemple";
 import { Container } from "react-bootstrap";
-import { Col } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import ManageNameplate from "./ManageNameplate";
 
