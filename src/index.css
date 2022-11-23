@@ -1,0 +1,39 @@
+body{
+  font-family: sans-serif;
+  overflow-x: hidden;
+
+}
+
+.App {
+  text-align: center;
+}
+
+.prev-img {
+  width: 260px;
+  border-radius: 0.2rem;
+}
+
+.nameplate-cards{
+  margin-top: 3rem;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 3rem;
+
+
+}
+
+.nameplate-card{
+  background-color: rgba(236, 236, 236, 0.545);
+  padding: 0.6rem;
+  border-radius: 4px;
+  height: auto;
+  width: 300px;
+}
+
+.nameplate-card img{
+  height: 300px;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 0.55rem;
+}
