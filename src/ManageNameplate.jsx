@@ -20,7 +20,7 @@ const ManageNameplate = () => {
   const [templeData, setTempleData] = useState({
     name: "",
     price: "",
-    image: "",
+    imageLink: "",
   });
   const getImgURL = (ev) => {
     setSelectedImage(ev.target.files[0]);
@@ -45,7 +45,7 @@ const ManageNameplate = () => {
     setTempleData({ ...templeData, [event.target.name]: event.target.value });
   };
   useEffect(() => {
-    setTempleData({ ...templeData, image: imageLink });
+    setTempleData({ ...templeData, imageLink: imageLink });
     const fetchTemps = async () => {
       const getTemples = await axios("https://sangam.shreyazz.repl.co/getNameplates");
       setTemps(getTemples.data.namePlates);
@@ -61,7 +61,7 @@ const ManageNameplate = () => {
       data: {
         name: templeData.name,
         price: templeData.price,
-        imageLink: templeData.image,
+        imageLink: templeData.imageLink,
       },
       headers: {
         "Content-Type": "application/json",

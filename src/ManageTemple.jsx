@@ -19,7 +19,7 @@ const ManageTemple = () => {
   const [templeData, setTempleData] = useState({
     name: "",
     price: "",
-    image: "",
+    imageLink: "",
   });
   const getImgURL = (ev) => {
     setSelectedImage(ev.target.files[0]);
@@ -44,7 +44,7 @@ const ManageTemple = () => {
     setTempleData({ ...templeData, [event.target.name]: event.target.value });
   };
   useEffect(() => {
-    setTempleData({ ...templeData, image: imageLink });
+    setTempleData({ ...templeData, imageLink: imageLink });
     const fetchTemps = async () => {
       const getTemples = await axios("https://sangam.shreyazz.repl.co/getTemples");
       setTemps(getTemples.data.temples)
@@ -61,7 +61,7 @@ const ManageTemple = () => {
       data: {
         name: templeData.name,
         price: templeData.price,
-        imageLink: templeData.image,
+        imageLink: templeData.imageLink,
       },
       headers: {
         "Content-Type": "application/json",
@@ -83,15 +83,15 @@ const ManageTemple = () => {
   };
 
 
-  const  refreshTemples = async () => {
+  const refreshTemples = async () => {
     const getTemples = await axios("https://sangam.shreyazz.repl.co/getTemples");
     setTemps(getTemples.data.temples)
   }
 
   const deleteTemple = async (name) => {
-    const deleteTemp = await axios.post("https://sangam.shreyazz.repl.co/deleteTemple", {name: name});
+    const deleteTemp = await axios.post("https://sangam.shreyazz.repl.co/deleteTemple", { name: name });
     console.log(deleteTemp)
-    if(deleteTemp.status == 200 || deleteTemp.status == 201){
+    if (deleteTemp.status == 200 || deleteTemp.status == 201) {
       toast("Temple Deleted", {
         position: "top-right",
         autoClose: 5000,
@@ -110,16 +110,16 @@ const ManageTemple = () => {
     setTempleData({
       name: temp.name,
       price: temp.price,
-      imageLink: imageLink
+      imageLink: temp.imageLink
     })
     setTempleName(temp.name);
   }
 
   const sendUpdatedData = async (event) => {
     event.preventDefault()
-    const upTemp = await axios.post("https://sangam.shreyazz.repl.co/updateTemple", {name: templeName, price: templeData.price, imageLink: imageLink, newName: templeData.name});
+    const upTemp = await axios.post("https://sangam.shreyazz.repl.co/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
     console.log(upTemp.data)
-    if(upTemp.status == 200 || upTemp.status == 201){
+    if (upTemp.status == 200 || upTemp.status == 201) {
       toast("Temple Updated", {
         position: "top-right",
         autoClose: 5000,
@@ -229,30 +229,30 @@ const ManageTemple = () => {
       </Container>
       <hr />
       <div className="pb-3">
-      <ToastContainer />
+        <ToastContainer />
 
-      <h1>All Temples</h1>
-      <Button variant="success" onClick={refreshTemples}>Refresh</Button>
-      <div className="nameplate-cards">
+        <h1>All Temples</h1>
+        <Button variant="success" onClick={refreshTemples}>Refresh</Button>
+        <div className="nameplate-cards">
           {temps.map((temp) => {
             return (
               <div className="nameplate-card" key={temp.name}>
                 <img src={temp.imageLink} />
-                  <h5>{temp.name}</h5>
-                  <p>{temp.price}</p>
-                  <Button
-                    variant="danger"
-                    onClick={() => deleteTemple(temp.name)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => updateTemple(temp)}
-                    style={{marginLeft: "2rem"}}
-                  >
-                    Edit
-                  </Button>
+                <h5>{temp.name}</h5>
+                <p>{temp.price}</p>
+                <Button
+                  variant="danger"
+                  onClick={() => deleteTemple(temp.name)}
+                >
+                  Delete
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => updateTemple(temp)}
+                  style={{ marginLeft: "2rem" }}
+                >
+                  Edit
+                </Button>
               </div>
             );
           })}
