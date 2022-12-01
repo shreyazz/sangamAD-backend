@@ -47,7 +47,7 @@ const ManageNameplate = () => {
   useEffect(() => {
     setTempleData({ ...templeData, imageLink: imageLink });
     const fetchTemps = async () => {
-      const getTemples = await axios("https://sangam.shreyazz.repl.co/getNameplates");
+      const getTemples = await axios("https://sangamapi.vercel.app/getNameplates");
       setTemps(getTemples.data.namePlates);
     };
 
@@ -57,7 +57,7 @@ const ManageNameplate = () => {
     event.preventDefault();
     const addTemple = await axios({
       method: "post",
-      url: ` https://sangam.shreyazz.repl.co/addNameplates`,
+      url: ` https://sangamapi.vercel.app/addNameplates`,
       data: {
         name: templeData.name,
         price: templeData.price,
@@ -83,13 +83,13 @@ const ManageNameplate = () => {
   };
 
   const refreshTemples = async () => {
-    const getTemples = await axios("https://sangam.shreyazz.repl.co/getNameplates");
+    const getTemples = await axios("https://sangamapi.vercel.app/getNameplates");
     setTemps(getTemples.data.namePlates);
   };
 
   const deleteNamePlate = async (name) => {
     const deleteNp = await axios.post(
-      "https://sangam.shreyazz.repl.co/deleteNameplate",
+      "https://sangamapi.vercel.app/deleteNameplate",
       { name: name }
     );
     console.log(deleteNp);
@@ -117,7 +117,7 @@ const ManageNameplate = () => {
   }
   const sendUpdatedData = async (event) => {
     event.preventDefault()
-    const upTemp = await axios.post("https://sangam.shreyazz.repl.co/updateNameplate", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
+    const upTemp = await axios.post("https://sangamapi.vercel.app/updateNameplate", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
     console.log(upTemp.status)
     if (upTemp.status == 200 || upTemp.status == 201) {
       toast("Name Plate Updated", {

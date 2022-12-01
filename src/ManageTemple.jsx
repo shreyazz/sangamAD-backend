@@ -46,7 +46,7 @@ const ManageTemple = () => {
   useEffect(() => {
     setTempleData({ ...templeData, imageLink: imageLink });
     const fetchTemps = async () => {
-      const getTemples = await axios("https://sangam.shreyazz.repl.co/getTemples");
+      const getTemples = await axios("https://sangamapi.vercel.app/getTemples");
       setTemps(getTemples.data.temples)
     }
 
@@ -57,7 +57,7 @@ const ManageTemple = () => {
     event.preventDefault();
     const addTemple = await axios({
       method: "post",
-      url: ` https://sangam.shreyazz.repl.co/addTemples`,
+      url: ` https://sangamapi.vercel.app/addTemples`,
       data: {
         name: templeData.name,
         price: templeData.price,
@@ -84,12 +84,12 @@ const ManageTemple = () => {
 
 
   const refreshTemples = async () => {
-    const getTemples = await axios("https://sangam.shreyazz.repl.co/getTemples");
+    const getTemples = await axios("https://sangamapi.vercel.app/getTemples");
     setTemps(getTemples.data.temples)
   }
 
   const deleteTemple = async (name) => {
-    const deleteTemp = await axios.post("https://sangam.shreyazz.repl.co/deleteTemple", { name: name });
+    const deleteTemp = await axios.post("https://sangamapi.vercel.app/deleteTemple", { name: name });
     console.log(deleteTemp)
     if (deleteTemp.status == 200 || deleteTemp.status == 201) {
       toast("Temple Deleted", {
@@ -117,7 +117,7 @@ const ManageTemple = () => {
 
   const sendUpdatedData = async (event) => {
     event.preventDefault()
-    const upTemp = await axios.post("https://sangam.shreyazz.repl.co/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
+    const upTemp = await axios.post("https://sangamapi.vercel.app/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
     console.log(upTemp.data)
     if (upTemp.status == 200 || upTemp.status == 201) {
       toast("Temple Updated", {
