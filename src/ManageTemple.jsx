@@ -14,12 +14,15 @@ const ManageTemple = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [templeName, setTempleName] = useState("")
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage2, setSelectedImage2] = useState(null);
   const [imageLink, setImageLink] = useState("");
+  const [imageLink2, setImageLink2] = useState("");
   const [loading, setLoading] = useState(false);
   const [templeData, setTempleData] = useState({
     name: "",
     price: "",
     imageLink: "",
+    imageLink2: "",
   });
   const getImgURL = (ev) => {
     setSelectedImage(ev.target.files[0]);
@@ -39,12 +42,32 @@ const ManageTemple = () => {
         setLoading(false);
       });
   };
+
+  const getImgURL2 = (ev) => {
+    setSelectedImage2(ev.target.files[0]);
+    const formdata = new FormData();
+    formdata.append("image", ev.target.files[0]);
+    setLoading(true);
+    fetch("https://api.imgur.com/3/image", {
+      method: "post",
+      headers: {
+        Authorization: "Client-ID 1e4107b48d3e3b7",
+      },
+      body: formdata,
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        setImageLink2(data.data.link);
+        setLoading(false);
+      });
+  };
+
   const [temps, setTemps] = useState([])
   const handleChange = (event) => {
     setTempleData({ ...templeData, [event.target.name]: event.target.value });
   };
   useEffect(() => {
-    setTempleData({ ...templeData, imageLink: imageLink });
+    setTempleData({ ...templeData, imageLink: imageLink, imageLink2: imageLink2 });
     const fetchTemps = async () => {
       const getTemples = await axios("https://sangamapi.vercel.app/getTemples");
       setTemps(getTemples.data.temples)
@@ -52,16 +75,17 @@ const ManageTemple = () => {
 
     fetchTemps();
 
-  }, [imageLink]);
+  }, [imageLink, imageLink2]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const addTemple = await axios({
       method: "post",
-      url: ` https://sangamapi.vercel.app/addTemples`,
+      url: `https://sangamapi.vercel.app/addTemples`,
       data: {
         name: templeData.name,
         price: templeData.price,
         imageLink: templeData.imageLink,
+        images: templeData.imageLink2 === "" ? [] : templeData.imageLink2,
       },
       headers: {
         "Content-Type": "application/json",
@@ -110,14 +134,18 @@ const ManageTemple = () => {
     setTempleData({
       name: temp.name,
       price: temp.price,
-      imageLink: temp.imageLink
+      imageLink: temp.imageLink,
+      images: temp.images
     })
     setTempleName(temp.name);
   }
 
   const sendUpdatedData = async (event) => {
     event.preventDefault()
-    const upTemp = await axios.post("https://sangamapi.vercel.app/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name });
+    if (templeData.imageLink2 !== "") {
+      templeData.images.push(templeData.imageLink2)
+    }
+    const upTemp = await axios.post("https://sangamapi.vercel.app/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name, images: templeData.images });
     console.log(upTemp.data)
     if (upTemp.status == 200 || upTemp.status == 201) {
       toast("Temple Updated", {
@@ -132,6 +160,26 @@ const ManageTemple = () => {
       });
     }
   }
+
+  const handleRemove = async (index) => {
+    templeData.images.pop(index);
+    const upTemp = await axios.post("https://sangamapi.vercel.app/updateTemple", { name: templeName, price: templeData.price, imageLink: templeData.imageLink, newName: templeData.name, images: templeData.images });
+    console.log(upTemp.data)
+    if (upTemp.status == 200 || upTemp.status == 201) {
+      toast("Image Deleted", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
+  console.log(temps);
 
   return (
     <>
@@ -175,22 +223,6 @@ const ManageTemple = () => {
           <Form.Group controlId="formFile" className="mt-3">
             <Form.Label>Image URL: {imageLink}</Form.Label>
           </Form.Group>
-
-          {!isEditing ? <><Button
-            variant="success"
-            type="submit"
-            className="mt-3"
-            onClick={(event) => handleSubmit(event)}
-          >
-            Upload
-          </Button></> : <><Button
-            variant="success"
-            type="submit"
-            className="mt-3"
-            onClick={(event) => sendUpdatedData(event)}
-          >
-            Update
-          </Button></>}
         </Form>
       </Container>
 
@@ -228,6 +260,95 @@ const ManageTemple = () => {
         </Button>
       </Container>
       <hr />
+
+      {/* new uploader */}
+
+      <Container className="mt-3">
+        <Form>
+          <Form.Group controlId="formFile" className="mt-3">
+            <Form.Label>Upload the image of the Temple Array</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(ev) => {
+                getImgURL2(ev);
+              }}
+            />
+          </Form.Group>
+          {loading && (
+            <Spinner animation="border" variant="secondary" className="mt-3" />
+          )}
+
+          <Form.Group controlId="formFile" className="mt-3">
+            <Form.Label>Image URL: {imageLink2}</Form.Label>
+          </Form.Group>
+
+          {!isEditing ? <><Button
+            variant="success"
+            type="submit"
+            className="mt-3"
+            onClick={(event) => handleSubmit(event)}
+          >
+            Upload
+          </Button></> : <><Button
+            variant="success"
+            type="submit"
+            className="mt-3"
+            onClick={(event) => sendUpdatedData(event)}
+          >
+            Update
+          </Button></>}
+        </Form>
+      </Container>
+
+      <Container className="mt-5">
+        <Row>
+          <Col>
+            <h3>Preview Image</h3>
+            {selectedImage2 && (
+              <img
+                alt="not fount"
+                className="prev-img"
+                src={URL.createObjectURL(selectedImage2)}
+              />
+            )}
+            <br />
+          </Col>
+
+          <Col>
+            <h3>Uploaded Image</h3>
+            {selectedImage2 && (
+              <img alt="loading..." className="prev-img" src={imageLink2} />
+            )}
+            <br />
+          </Col>
+        </Row>
+        <Button
+          onClick={() => {
+            setSelectedImage2(null);
+            setImageLink2("");
+          }}
+          variant="danger"
+          className="mt-3"
+        >
+          Remove Image
+        </Button>
+      </Container>
+      <Container className="mt-5">
+        <h5>List of Images:</h5>
+        <Container className="p-3" style={{ background: "lightgrey", borderRadius: "5px" }}>
+          {
+            templeData.images === undefined ?
+              <p>No Image List</p>
+              : templeData.images.map((elem, index) => {
+                return (
+                  <Container key={index} className="d-flex"><a href={elem} style={{ textDecoration: "none", marginRight: "1rem" }} target="_blank" rel="noopener noreferrer">Image {index + 1}</a> <div style={{ cursor: "pointer" }} className="cross_btn" onClick={() => { handleRemove(index) }}>X</div></Container>
+                )
+              })
+          }
+        </Container>
+      </Container>
+      <hr />
+
       <div className="pb-3">
         <ToastContainer />
 
