@@ -22,6 +22,7 @@ const ManageNameplate = () => {
   const [templeData, setTempleData] = useState({
     name: "",
     price: "",
+    desc: "",
     imageLink: "",
     imageLink2: "",
   });
@@ -84,6 +85,7 @@ const ManageNameplate = () => {
         name: templeData.name,
         price: templeData.price,
         imageLink: templeData.imageLink,
+        desc: templeData.desc,
         images: templeData.imageLink2 === "" ? [] : templeData.imageLink2,
       },
       headers: {
@@ -135,6 +137,7 @@ const ManageNameplate = () => {
       name: temp.name,
       price: temp.price,
       imageLink: temp.imageLink,
+      desc: temp.desc,
       images: temp.images
     })
     setTempleName(temp.name);
@@ -201,6 +204,16 @@ const ManageNameplate = () => {
               placeholder="Price of the Nameplate"
               name="price"
               value={templeData.price}
+              onChange={(event) => handleChange(event)}
+            />
+          </Form.Group>
+
+          <Form.Group className="mt-3" controlId="formGridDescription">
+            <Form.Label>Description of the Temple</Form.Label>
+            <Form.Control
+              placeholder="Description of the Temple"
+              name="desc"
+              value={templeData.desc}
               onChange={(event) => handleChange(event)}
             />
           </Form.Group>

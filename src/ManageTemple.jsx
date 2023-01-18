@@ -21,6 +21,7 @@ const ManageTemple = () => {
   const [templeData, setTempleData] = useState({
     name: "",
     price: "",
+    desc: "",
     imageLink: "",
     imageLink2: "",
   });
@@ -84,6 +85,7 @@ const ManageTemple = () => {
       data: {
         name: templeData.name,
         price: templeData.price,
+        desc: templeData.desc,
         imageLink: templeData.imageLink,
         images: templeData.imageLink2 === "" ? [] : templeData.imageLink2,
       },
@@ -135,6 +137,7 @@ const ManageTemple = () => {
       name: temp.name,
       price: temp.price,
       imageLink: temp.imageLink,
+      desc: temp.desc,
       images: temp.images
     })
     setTempleName(temp.name);
@@ -207,6 +210,16 @@ const ManageTemple = () => {
             />
           </Form.Group>
 
+          <Form.Group className="mt-3" controlId="formGridDescription">
+            <Form.Label>Description of the Temple</Form.Label>
+            <Form.Control
+              placeholder="Description of the Temple"
+              name="desc"
+              value={templeData.desc}
+              onChange={(event) => handleChange(event)}
+            />
+          </Form.Group>
+
           <Form.Group controlId="formFile" className="mt-3">
             <Form.Label>Upload the image of the Temple</Form.Label>
             <Form.Control
@@ -266,7 +279,7 @@ const ManageTemple = () => {
       <Container className="mt-3">
         <Form>
           <Form.Group controlId="formFile" className="mt-3">
-            <Form.Label>Upload the image of the Temple Array</Form.Label>
+            <h3>Upload the image of the Temple List</h3>
             <Form.Control
               type="file"
               onChange={(ev) => {
